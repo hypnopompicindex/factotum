@@ -1,8 +1,28 @@
-from flask import Flask
-from flask.ext.script import Manager, Shell
+import os
+from flask import Flask, render_template, redirect
+from flask.ext.mail import Mail, Message
+from flask.ext.wtf import Form
+from wtforms import StringField, SubmitField
+
+
 app = Flask(__name__)
 
-manager = Manager(app)
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['DEFAULT_MAIL_SUBJECT'] = '[Politburo Voting Results]'
+app.config['DEFAULT_MAIL_SENDER'] = 'Admin <admin@example.com>'
+app.config['SECRET_KEY'] = 'random_string'
+app.config['DEFAULT_ADMIN'] = 'Admin <admin@example.com>'
+
+mail = Mail(app)
+
+
+class PolitburoForm(Form):
+    name = StringField('Who is your favorite member of the Politburo circa 1980?')
+    submit = SubmitField('Submit')
 
 
 if __name__ == '__main__':
