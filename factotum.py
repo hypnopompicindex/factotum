@@ -32,5 +32,14 @@ def send_email(to, subject, template, **kwargs):
     mail.send(msg)
 
 
+@app.route('/', methods=('GET', 'POST'))
+def submit():
+    form = PolitburoForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        send_email(app.config['DEFAULT_ADMIN'], 'Button clicked', 'mail/favorite', name=name)
+        return redirect('/')
+    return render_template('index.html', form=form)
+
 if __name__ == '__main__':
     manager.run()
