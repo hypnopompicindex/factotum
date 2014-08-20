@@ -25,5 +25,12 @@ class PolitburoForm(Form):
     submit = SubmitField('Submit')
 
 
+def send_email(to, subject, template, **kwargs):
+    msg = Message(app.config['DEFAULT_MAIL_SUBJECT'] + ' ' + subject,
+        sender=app.config['DEFAULT_MAIL_SENDER'], recipients=[to])
+    msg.html = render_template(template + '.html', **kwargs)
+    mail.send(msg)
+
+
 if __name__ == '__main__':
     manager.run()
